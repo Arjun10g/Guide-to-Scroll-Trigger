@@ -13,7 +13,7 @@ let fontSize2 = parseFloat(window.getComputedStyle(name).fontSize);
 
 function adjustFontSize(element, windowWidth) {
     let cfont = fontSize;
-    let reduc = Math.pow((windowWidth / 1500), 0.6);
+    let reduc = Math.pow((windowWidth / 1500), 0.95);
     element.style.fontSize = cfont*reduc + "px";
   }
   
@@ -92,7 +92,6 @@ let tl2 = gsap.timeline({
         },
         start: "top 0",
         end: "bottom 0",
-        markers: true,
         scrub: true
     }
 });
