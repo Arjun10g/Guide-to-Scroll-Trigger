@@ -4,7 +4,7 @@ gsap.registerPlugin(Observer);
 
 let title = document.querySelector(".title h1");
 let name = document.querySelector(".name h1");
-let question1 = document.querySelector(".question1 h1");
+let question1 = document.querySelector(".question1 div h1");
 let windowHeight = parseFloat(window.innerHeight);
 
 let fontSize = parseFloat(window.getComputedStyle(title).fontSize);
@@ -80,6 +80,7 @@ tl.fromTo(".name", {
 }, "<")
 
 let tl2 = gsap.timeline({
+    immediateRender: false,
     scrollTrigger: {
         trigger: ".question1",
         onEnter: () => {

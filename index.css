@@ -121,7 +121,7 @@ body{
 
 }
 
-.question1 h1{
+.question1 div h1{
     background-image: linear-gradient(90deg, #9b57a3, #FFFFFF, #3E3E3E, #a081a5
     );
     background-size: 200% auto;
@@ -134,4 +134,17 @@ body{
     font-weight: 300;
     text-align: center;
     animation: left-right 5s linear infinite;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1000px) {
+    .title{
+        aspect-ratio: 0.5;
+    }
+    .name{
+        aspect-ratio: 0.5;
+    }
+    .question1{
+        aspect-ratio: 0.5;
+    }
 }
