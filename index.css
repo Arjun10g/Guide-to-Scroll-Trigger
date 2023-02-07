@@ -8,8 +8,9 @@
 }
 
 body{
-    background-color: #f5f5f5;
+    background-color: white;
     overflow-x: hidden;
+    position: relative;
 }
 
 .title{
@@ -23,7 +24,7 @@ body{
     background-blend-mode: darken;
     background-color: rgba(0, 0, 0, 0.371);
     position: relative;
-    z-index: 10;
+    z-index: 3;
 }
 
 .title h1{
@@ -79,7 +80,7 @@ body{
     background-position: 100% 50%;
     background-blend-mode: darken;
     background-color: rgba(0, 0, 0, 0.4);
-    z-index:9;
+    z-index:2;
     position: relative;
 }
 
@@ -108,17 +109,15 @@ body{
 }
 
 .question1{
-    display: grid;
-    place-items: center;
-    background: url('img1.jpeg');
+    background: url('img.jpeg');
     width: 100vw;
     height: 100vh;
     background-size: 100% 150%;
     background-position: 100% 60%;
     background-blend-mode: darken;
     background-color: rgba(0, 0, 0, 0.2);
-    z-index: 7;
-
+    z-index: 1;
+    position: relative;
 }
 
 .question1 div h1{
@@ -148,3 +147,186 @@ body{
         aspect-ratio: 0.5;
     }
 }
+
+.quest{
+    width: 20vw;
+    height: 20vw;
+    outline: 5px solid #fff;
+    box-shadow: 2px 2px 10px #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(245, 222, 179, 0.173);
+    transition: 2s ease-in-out;
+    display: grid;
+    place-items: center;
+    font-size: 5rem;
+}
+
+
+.quest:nth-child(1){
+    rotate: -5deg;
+}
+
+.quest:nth-child(2){
+    rotate: -1.5deg;
+}
+
+.quest:nth-child(3){
+    rotate: 1.5deg;
+}
+
+.quest:nth-child(4){
+    rotate: 5deg;
+}
+
+.i2{
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.i2 i{
+    font-size: 80px;
+    color: #fff;
+    rotate: 180deg;
+    animation: up-down 1s linear infinite alternate;
+}
+
+/* .quest:nth-child(1):hover{
+    rotate:5deg;
+    translate: -20vw 20vh;
+}
+
+.quest:nth-child(2):hover{
+    rotate: -5deg;
+    translate: 20vw 20vh;
+}
+
+.quest:nth-child(3):hover{
+    rotate: 5deg;
+    translate: -20vw -20vh;
+}
+
+.quest:nth-child(4):hover{
+    rotate: -5deg;
+    translate: 20vw -20vh;
+} */
+
+.answ{
+    width: calc(100vw);
+    height: calc(100vw);
+    background-color: white;
+    padding: 1in;
+    font-size: 12pt;
+    font-family: 'Times New Roman', Times, serif;
+    color: black;
+    z-index: 4;
+    overflow: scroll;
+    position: relative;
+}
+
+.answ *{
+    line-height: 200%;
+    margin-bottom: 15px;
+}
+
+.answ h3{
+    text-align: center;
+    font-size: 12pt;
+    font-weight: 600;
+}
+
+.answ p{
+    line-height: 200%;
+    text-indent: 1.3cm;
+}
+
+.answ pre{
+    font-size: 12pt;
+    font-family: 'Times New Roman', Times, serif;
+    color: white;
+    padding: 10px;
+    background: gray;
+    overflow: scroll;
+    max-height: 40vh;
+}
+
+.answ pre.out{
+    font-size: 12pt;
+    font-family: 'Times New Roman', Times, serif;
+    color: pink;
+    padding: 10px;
+    background: gray;
+}
+
+.answ ul{
+    list-style-type: lower-alpha;
+}
+
+.answ div.img{
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: scroll;
+}
+
+.answ div.img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.answ .plot{
+    width: 100%;
+    height: 50%;
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.plot img{
+    width: 80%;
+    aspect-ratio: 1/1;
+}
+
+.close{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+    z-index: 100000;
+}
+
+.close2{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+    z-index: 100000;
+}
+
+.answer1{
+    display: none;
+}
+
+.answer2{
+    display: none;
+}
+
+.answer3{
+    display: none;
+}
+
+.answer4{
+    display: none;
+}
+

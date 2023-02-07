@@ -23,7 +23,268 @@
         <h1 data-value="By - Arjun Ghumman">By - Arjun Ghumman</h1>
     </div>
     <div class="question1">
-        <div><h1>Question 2.3</h1></div>
+        <div id="cont">
+                <div class="i2">
+                    <i class="fas fa-hand-pointer"></i>
+                </div>
+            <div class="quest qu1"><h1></h1></div>
+            <div class="quest qu2"><h1></h1></div>
+            <div class="quest qu3"><h1></h1></div>
+            <div class="quest qu4"><h1></h1></div>
+        </div>
+        <div class="answer1 answ">
+            <h3>Question 2.3</h3>
+            <p>The data set UCBAdmissions is a 3-way table of frequencies classified by <i>Admit</i>,
+                <i>Gender</i> and <i>Dept</i>.</p>
+                <ul>
+                <li>Find the total number of cases contained in this table.</li>
+                <li>
+                    For each department, find the total number of applicants.
+                </li>
+                <li>
+                    For each department, find the overall proportion of applicants who were admitted.
+                </li>
+                <li>
+                    Construct a tabular display of department (rows) and gender (columns), showing the proportion
+                    of applicants in each cell who were admitted relative to the total applicants in that cell.
+                </li>
+            </ul>
+    
+            <ul>
+                <li>The total number of cases in the UBC admission's dataset is 4526</li>
+                <pre>
+    UCBAdmissions %>% as_tibble() %>% dplyr::summarise(sum(n))</pre>
+    <pre class="out">4526</pre>
+                <li>Number of Applicants per Group -</li>
+                <pre>
+    UCBAdmissions %>% as_tibble() %>% group_by(Dept) %>% dplyr::summarise(Count = sum(n)) %>% rename(Department = Dept) %>% 
+    apa_table_function("Table1","Number of Applicants per group")
+                </pre>
+                <div class="img"><img src="img1.jpeg" alt=""></div>
+                <li>Proportion of applicants who were admitted per department -</li>
+                <pre>Admitted <- UCBAdmissions %>% as_tibble() %>% group_by(Dept, Admit) %>%  dplyr::summarise(n = sum(n)) %>% ungroup() %>% filter(str_detect(Admit, '^A'))
+    Totals <- UCBAdmissions %>% as_tibble() %>% group_by(Dept, Admit) %>%  dplyr::summarise(n = sum(n)) %>% ungroup() %>% group_by(Dept) %>% dplyr::summarise(total_n = sum(n))
+    Admitted %>% left_join(Totals) %>% mutate(prop = (n/total_n)*100) %>% 
+    ggplot(aes(Dept, prop)) +
+    geom_bar(stat = 'identity', fill = rgb(1,0.5,0,0.5), width = 0.8) + 
+    geom_text(aes(label = paste0(Dept,'= ',prop %>% round(1), '%')),nudge_y = 2, col = 'floralwhite', size = unit(8,'pt')) +
+    mytheme() +
+    labs(x = "Department",
+    y = 'Proportions') +
+    theme(axis.text.x = element_blank(),
+    axis.title = element_text(size = unit(12, 'pt')))</pre>
+    <div class="plot">
+        <img src="img2.jpeg" alt="">
     </div>
+    <pre>tab2 <- UCBAdmissions %>% as_tibble() %>% expand.dft(freq = 'n') %>% tabyl(Dept, Gender) %>% adorn_percentages() %>% adorn_pct_formatting()
+    tab2 <- tab2 %>% as_tibble() %>% apa_table_function('Table 2', 'Proportions by Men and Women Admitted')</pre>
+    <div class="img"><img src="img3.jpeg" alt=""></div>
+            </ul>
+        </div>
+        <div class="answer2 answ">
+            <h3>Question 3.1</h3>
+            <p>The Arbuthnot data in HistData also contains the variable Ratio,
+                giving the ratio of male to female births.</p>
+                <ul>
+                    <li>Make a plot of Ratio over Year, similar to Figure 3.1. What features stand out? Which plot
+                        do you prefer to display the tendency for more male births?</li>
+                    <li>Plot the total number of christenings, Males + Females or Total (in 000s) over time.
+                        What unusual features do you see?</li>
+                </ul>
+    
+        <ul>
+            <li>Ratio of Male Births compared to Female Births - </li>
+        <pre>dat <- HistData::Arbuthnot %>% as_tibble()
+        anim <- dat %>% mutate(prob_male = Males/(Males+Females),
+        Year = Year) %>% 
+        ggplot(aes(Year, Ratio)) +
+        geom_point(aes(group = 1),shape = 21, size = 5, col = 'red',fill = "floralwhite") +
+        geom_line(stat = 'Identity', size = 0.5,col = 'floralwhite') +
+        geom_hline(yintercept = 1,col = 'floralwhite') +
+        annotate('text',x = 1670, y = 1.01,label = 'Ratio Horizontal Line of 50% birth rate',col = 'floralwhite',family = "Times New Roman") +
+        scale_y_continuous(labels = scales::percent_format()) +
+        mytheme() +
+        jtools::drop_gridlines() +
+        labs(title = "Probability of having a male child in year {(frame_along)}") +
+        gganimate::transition_reveal(Year,keep_last = T) +
+        shadow_trail(0.01)+
+        gganimate::ease_aes('linear')</pre>
+        <div class="plot">
+            <img src="anim1.mp4" alt="">
+        </div>
+        <p>Both Visualizations do a great job of demonstrating the propensity for more male births. I believe plotting the ratio provides more information as it consists more information compared to the original plot. </p>
+        <p>Total Christenings by Year displayed using a line plot.</p>
+        <div class="plot"><img src="plot4.jpeg" alt=""></div>
+        <p>Over the years, we observe a general trend line which demonstrates increased rates of christenings. However, the pattern is non-linear, as we observe a sharp dip during 1640 to 1660 which can be attributed to events such as the Civil War, Puritanism, and a move away from religious traditions. This pattern is better captured by a 2nd degree or 3rd degree polynomial. </p>
+    </ul>
+        </div>
+        <div class="answer3 answ">
+            <h3>Q 3.3</h3>
+            <p>Use the data set WomenQueue to:</p>
+            <ul>
+                <li>Produce plots analogous to those shown in Section 3.1 (some sort of bar graph of frequencies)</li>
+                <li>Check for goodness-of-fit to the binomial distribution using the goodfit() methods described in Section 3.3.2.</li>
+                <li>Make a reasonable plot showing departure from the binomial distribution.</li>
+                <li>Suggest some reasons why the number of women in queues of length 10 might depart from a binomial distribution, Bin(n = 10; p = 1=2).</li>
+            </ul>
+            <ul>
+            <li>Produce a Plot - For this item, I chose to plot overlayed bar plots with observed and fitted frequencies plotted for each observation. </p>
+            <pre>p1 <- WomenQueue %>% as_tibble() %>% mutate(across(everything(), as.numeric)) %>% ggplot(aes(nWomen, n)) +
+    geom_bar(aes(fill = "observed"),stat = 'identity', col = rgb(1,1,1,0.5)) +
+    scale_x_continuous(breaks = 0:10) +
+    mytheme() +
+    jtools::drop_gridlines() 
+    
+    gf_dat <- WomenQueue %>% goodfit('binom')
+    gf_dat$par
+    summary(gf_dat)
+    dat2 <- gf_dat$fitted %>% as_tibble() %>% mutate(id = 0:10) 
+    
+    p1 + geom_bar(data = dat2, aes(id, value, fill = "fitted"), stat = 'identity') +
+    scale_fill_manual(values = c( "white", "pink")) +
+    labs(fill = NULL)
+    ggsave('plot5.jpeg', scale = 1.8)</pre>
+    <div class="plot"><img src="plot5.jpeg" alt=""></div>
+    <li>Goodness of Fit - </li>
+    <pre>gf_dat <- WomenQueue %>% goodfit('binom')
+    gf_dat
+    summary(gf_dat)
+    gf_dat$par</pre>
+    <pre class="out">
+    Observed and fitted values for binomial distribution
+    with parameters estimated by `ML' 
+        
+    count observed     fitted pearson residual
+    0        1  0.3315007        1.1610708
+    1        3  2.5522622        0.2802600
+    2        4  8.8425721       -1.6284964
+    3       23 18.1546613        1.1371822
+    4       25 24.4605946        0.1090641
+    5       19 22.5989918       -0.7570705
+    6       18 14.4993531        0.9193354
+    7        5  6.3789822       -0.5459878
+    8        1  1.8417194       -0.6202341
+    9        1  0.3151024        1.2201121
+    10       0  0.0242601       -0.1557565
+    </pre>
+    <pre class="out">
+    Goodness-of-fit test for binomial distribution
+    
+                        X^2    df  P(> X^2)
+    Likelihood Ratio 8.650999  8 0.3725869
+    </pre>
+    
+    <p>This information summarizes a goodness-of-fit test for the binomial distribution. The test used was a likelihood ratio and resulted in a chi-squared statistic of 8.65 with 8 degrees of freedom. The calculated p-value was 0.37, which indicates that there is no significant departure from the binomial distribution.</p>
+    <li>Plots to summarise the fit</li>
+    <pre>distplot(WomenQueue,type = "binomial")</pre>
+    <pre>plot(gf_dat, type = "deviation")</pre>
+    <div class="plot">
+        <img src="img7.jpeg" alt="">
+    </div>
+    <div class="plot">
+        <img src="img8.jpeg" alt="">
+    </div>
+    <p>In an attempt to learn more about count metameters, I attempted to estimate them myself in R.</p>
+    <pre>
+        count_metamer <- function(dat, k, n){
+            gf_dat <- dat %>% goodfit('binom')
+            data <- dat %>% as_tibble()
+            n <- gf_dat$observed
+            prob <- dbinom(gf_dat$count,11,0.5)
+            k <- data %>% select({{k}}) %>% pull %>% as.numeric()
+            N <- sum(n)
+            count_m <- log(n) - log(N * choose(max(k), k))
+            count_m
+          }
+    </pre>
+    <p>Fortunately, I got it to work. </p>
+    <li>Reasons why it might depart from a binomial distribution -</li>
+    <p> The goodness-of-fit test for the binomial distribution showed close agreement between the observed and model-fitted frequencies, suggesting that the number of women in the queues follows a binomial distribution. However, it's not a given assumption that men and women are equally likely to be found in queues, so the estimate of the parameter p and the fit of the binomial distribution should be evaluated. Hence why I examined the dist plot. </p>
+    </ul>
+        </div>
+        <div class="answer4 answ">
+            <h3>Question 3.4</h3>
+            <p>Example 3.13 on the Distribution of Male Children in Families in Saxony:</p>
+    <ul>
+      <li>Carry out the goodness-of-fit (GOF) test for the fixed binomial distribution Bin(n = 12; p = 1/2). What is the ratio of chi-squared to degrees of freedom (2/df)? What conclusion can be drawn?</li>
+      <li>Test the lack of fit for the model Bin(n = 12; p = 1/2) compared to the model Bin(n = 12; p = ^p), where ^p is estimated from the data.</li>
+      <li>Use the plot.goodfit() method to visualize these two models and compare the results.</li>
+    </ul>
+    <ul>
+        <li>Goodness of Fit (GOF) statistics</li>
+        <pre>
+    fixed_gf <- goodfit(Saxony, 'binomial' ,par = list(size = 12,prob =0.5))
+    fixed_gf2 <- goodfit(Saxony, 'binomial' ,par = list(size = 12))
+    fixed_gf$par
+    fixed_gf2$par
+    summary(fixed_gf)
+    summary(fixed_gf2)
+        </pre>
+        <pre class="out">
+            Goodness-of-fit test for binomial distribution
+    
+            X^2 df     P(> X^2)
+    Pearson          249.1954 12 2.013281e-46
+    Likelihood Ratio 205.4060 12 2.493625e-37
+        </pre>
+    <p>Based on the results of the goodness-of-fit test, it seems that the data is not well-fit by a binomial distribution. This can be seen from the low p-value for Pearson and for Likelihood Ratio test which indicates that the observed deviations from the binomial distribution are statistically significant. A low P-value here indicates that the null hypothesis that the data fits a binomial distribution can be rejected. Hence, we can conclude that the data is not well-fit by a binomial distribution. </p>
+        <li>Model fit when the probability is estimated from the data -</li>
+        <pre class="out">
+    Goodness-of-fit test for binomial distribution
+    
+                         X^2 df     P(> X^2)
+    Likelihood Ratio 97.0065 11 6.978187e-16
+        </pre>
+    <p> Model 1 and Model 2 have distinct chisquared and df values in their goodness-of-fit tests to the binomial distribution. Comparing the chi-squared model, it is clear that model 2 is a closer fit to a binomial distribution than model 1. </p>
+        <li>visualizing these two models -</li>
+        <div class = "plot">
+            <img src="img9.jpeg" alt="">
+            </div>
+    <p>I additionally attempted to create these graphs from scratch</p>
+    <pre>
+        dat <- tibble(Count = fixed_gf$count, Observed = fixed_gf$observed %>% sqrt, fitted = fixed_gf$fitted %>% sqrt, pearson_resid = resid(fixed_gf))
+        dat %>% mutate(sub = ifelse((Observed - fitted)>0, 'Observed>Fitted', 'Fitted>Observed'), Obfit = Observed - fitted) %>%
+          ggplot(aes(Count, Obfit, fill = pearson_resid)) +
+          geom_bar(stat = 'identity') +
+          scale_fill_distiller(breaks = seq(-8,8,4),limits = c(-10,10), direction = 1) +
+          annotate('label',label = "Observed", x = 6, y = 2, size = unit(12, 'pt'), fill = "gray20", color = "floralwhite",label.padding = unit(0.75, "lines")) +
+          annotate('label',label = "Fitted", x = 6, y = -3, size = unit(12, 'pt'), fill = "gray20", color = "floralwhite",label.padding = unit(0.75, "lines")) +
+          scale_y_continuous(limits = c(-4,4)) +
+          guides(fill = guide_legend(keywidth = unit(5,'cm'),direction = "horizontal",byrow = T,label.position = "bottom",title.position = "top")) +
+          labs(fill = 'Pearson Residual', title = paste0("Size = 12", "\n", "p = 0.5")) +
+          mytheme() +
+          theme(legend.title = element_text(color = 'white'),legend.position = "bottom", legend.title.align = 0.5, plot.title = element_text(size = unit(25, "pt"))) +
+          jtools::drop_gridlines() 
+        ggsave('img10.jpeg', scale = 1.8)
+        
+        dat2 <- tibble(Count = fixed_gf2$count, Observed = fixed_gf2$observed %>% sqrt, fitted = fixed_gf2$fitted %>% sqrt, pearson_resid = resid(fixed_gf2))
+        dat2 %>% mutate(sub = ifelse((Observed - fitted)>0, 'Observed>Fitted', 'Fitted>Observed'), Obfit = Observed - fitted) %>%
+          ggplot(aes(Count, Obfit, fill = pearson_resid)) +
+          geom_bar(stat = 'identity') +
+          scale_fill_distiller(breaks = seq(-8,8,4),limits = c(-10,10), direction = 1) +
+          annotate('label',label = "Observed", x = 6, y = 2, size = unit(12, 'pt'), fill = "gray20", color = "floralwhite",label.padding = unit(0.75, "lines")) +
+          annotate('label',label = "Fitted", x = 6, y = -3, size = unit(12, 'pt'), fill = "gray20", color = "floralwhite",label.padding = unit(0.75, "lines")) +
+          scale_y_continuous(limits = c(-4,4)) +
+          guides(fill = guide_legend(keywidth = unit(5,'cm'),direction = "horizontal",byrow = T,label.position = "bottom",title.position = "top")) +
+          labs(fill = 'Pearson Residual', title = paste0("Size = 12")) +
+          mytheme() +
+          theme(legend.title = element_text(color = 'white'),legend.position = "bottom", legend.title.align = 0.5, plot.title = element_text(size = unit(25, "pt"))) +
+          jtools::drop_gridlines() 
+        ggsave('img11.jpeg', scale = 1.8)
+        
+    </pre>
+    <p>Model 1</p>
+        <div class = "plot">
+            <img src="img10.jpeg" alt="">
+            </div>
+    <p>Model 2</p>
+        <div class = "plot">
+            <img src="img11.jpeg" alt="">
+            </div>
+    </ul>
+        </div>
+    </div>
+
+    <div class="close"><i class="fas fa-xmark-square"></i></div>
 </body>
 </html>
